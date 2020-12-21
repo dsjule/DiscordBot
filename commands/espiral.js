@@ -1,3 +1,6 @@
+/**
+ * This document contains the link to a guide of how to do the spiral abyss in Genshin impact.
+ */
 module.exports = {
     name: "espiral",
     description: "Guía de espiral del abismo",

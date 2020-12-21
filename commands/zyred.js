@@ -1,3 +1,6 @@
+/**
+ * This file contains a personalized command for a member of the server.
+ */
 module.exports = {
     name: "zyred",
     description: "Zyred el manco",

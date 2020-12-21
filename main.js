@@ -1,11 +1,44 @@
-const Discord = require("discord.js");;
+/**
+ * Basic Discord bot created for personal use in a private server based on Genshin Impact game.
+ * This bot contains reaction messages as well as some replies specific to users.
+ * 
+ * The commands are divided into different files that are all contained in a folder called "commands"
+ * These files are like classes that represent a command.
+ * 
+ * The bot searches through the folder comparing the command sent by the user. Once the file is found, 
+ * it executes the code inside it.
+ * 
+ * A few flags have been added to avoid spamming of some commands. Specially those that tag a user.
+ * A 30 seconds cooldown is added for each command that is included in the switch case.
+ * 
+ * BOT USES DISCORD.JS and NODEJS to run.
+ * 
+ * LANGUAGE OF COMMANDS : SPANISH
+ * 
+ * TODO: 
+ * - Move all commands to the switch case.
+ * - Improve quality of code(Avoid repetition fo tasks by creating variables or files that execute the tasks.)
+ */
+
+
+//Include Discord.js Library.
+const Discord = require("discord.js");
 
 //create discord bot as client.
 const client = new Discord.Client();
 
-const prefix = "!";
+//Prefix that will be used to call the bot.
+const prefix = "--";
 
+//Create an object of the File Library to manage files.
 const fs = require("fs");
+
+//File created to make a react message to self assign roles.
+const reclamarRol = require("./reclamar-rol")
+
+//A set that will store users who have recently used a command.
+//They will be blacks listed for 30 seconds to avoid spam.
+const usedCommandRecently = new Set();
 
 client.commands = new Discord.Collection();
 
@@ -17,14 +50,18 @@ for(const file of commandsFiles){
     client.commands.set(command.name, command)
 }
 
-//Event listener
+//Event listener. Waits for the bot to completely load and sends a message on the console to notify.
 client.once("ready", () => { //<--anonymous function.
     console.log("Stupid Bot is online");
+    
+
+    //Method that sends a message to specific chat ID on the server.
+    reclamarRol(client)
 }); 
 
 
 
-
+//event listener on message.
 client.on("message", message => {
     //Completely stop if the message doesn't start with a prefix or if the author is the bot.
     if(!message.content.startsWith(prefix) || message.author.bot) return;
@@ -34,16 +71,8 @@ client.on("message", message => {
     //lower case the command to avoid errors.
     const command = args.shift().toLowerCase();
 
-    //Commands
-    if(command === "hola"){
-        client.commands.get("saludo").execute(message, args);
-    } else if (command === "lanlan"){
-        client.commands.get("lanlan").execute(message, args);
-    } else if (command === "zyred"){
-        client.commands.get("zyred").execute(message, args);
-    } else if (command === "frozt"){
-        client.commands.get("frozt").execute(message, args);
-    } else if (command === "mapa"){
+    //Commands <--Carefull! These are spammable. They need to be moved to a switch case.
+    if(command === "mapa"){
         client.commands.get("mapa").execute(message, args);
     } else if (command === "espiral"){
         client.commands.get("espiral").execute(message, args);
@@ -77,11 +106,232 @@ client.on("message", message => {
         client.commands.get("bennett").execute(message, args);
     } else if (command === "keqing"){
         client.commands.get("keqing").execute(message, args);
-    } else {
+    } else if (command === "musica"){
+        client.commands.get("musica").execute(message, args);
+    }
+    //error message if the command is not in the list.
+    if (!client.commands.get(command)){
         client.commands.get("error").execute(message, args);
+    }
+
+    let cooldownMessage = "no puedes usar ese comando en este momento. Por favor espera otros 30 segundos.";
+
+    //Cooldown to avoid tag spamming as these are commands that tag users.
+    switch (command){
+        case 'hola':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("hola").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'lanlan':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("lanlan").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'setsuna':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("setsuna").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'setsuna2':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("setsuna2").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'razor':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("razor").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'razor2':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("razor2").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'zyred':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("zyred").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'frozt':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("frozt").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'frozt2':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("frozt2").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'honos':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("honos").execute(message, args, client);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'honos2':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("honos2").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'esteban':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("esteban").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'drak':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("drak").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'drak2':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("drak2").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'aby':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("aby").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'memo':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("memo").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'alan':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("alan").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'permalink':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("permalink").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        case 'comandos':
+            if(usedCommandRecently.has(message.author.id)){
+                message.reply(cooldownMessage);
+            } else {
+                client.commands.get("comandos").execute(message, args);
+                usedCommandRecently.add(message.author.id);
+                setTimeout(() => {
+                    usedCommandRecently.delete(message.author.id);
+                }, 30000)
+            }
+        break;
+        
     }
 });
 
 
 //log in command. Keep this always at the very end of the file.
-client.login("Nzg0NTk5OTkwODIyNTAyNDEw.X8rprg.qAd4fFmV8jiw1xvvKUUsgot2Z-0");
+//Secret token goes in here.
+client.login("SECRET_TOKEN_GOES_HERE");
